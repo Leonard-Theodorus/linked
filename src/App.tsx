@@ -1,35 +1,48 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import LinksView from './components/LinksView'
+import { dummyLinks } from './data/LinkItemDummy'
+import NewLinkItemView from './components/NewLinkItemView'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [links, setLinks] = useState(dummyLinks)
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    function clickLinkItem (link : string) {
+        window.open(link, '_blank');
+    }
+    function deleteLinkItem (id : number) {
+        setLinks (
+            (prevLinks) => {
+
+            }
+        )
+    }
+
+    function submitNewLink () {
+
+    }
+    return (
+        <main className='h-screen'>
+            <div className='space-y-4 p-6'>
+                <h1 className='text-center text-black text-4xl'>
+                    Interwebs Breadcrumbs
+                </h1>
+            </div>
+
+            <div className='max-w-lg mx-auto space-y-6'>
+                <NewLinkItemView 
+                    onSubmitNewLink={submitNewLink}
+                />
+                <LinksView 
+                    links= {links}
+                    onClickLinkItem = {clickLinkItem}
+                    onDeleteLinkItem= {deleteLinkItem}
+                />
+            </div>
+
+        </main>
+    )
 }
 
 export default App
+
