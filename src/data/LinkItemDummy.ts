@@ -4,7 +4,7 @@ export let dummyLinks : LinkItem[] = [
     {
         id: 1,
         title : "Youtube",
-        topic: "entertainment",
+        topic: "Entertainment",
         link : "https://www.youtube.com"
     },
     {

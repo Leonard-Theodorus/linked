@@ -3,20 +3,34 @@ import { LinkItem } from "../types/LinkItem";
 interface LinkItemViewProps {
     link : LinkItem,
     onClickLinkItem : (link : string) => void,
-    onDeleteLinkItem : (id : number) => void
 }
 
 export default function LinkItemView (
 {
     link,
     onClickLinkItem,
-    onDeleteLinkItem
 
 } : LinkItemViewProps) {
+
+    function handleOnDrag(e : React.DragEvent, linkToDelete : LinkItem) {
+        const deleteId : string = String(linkToDelete.id)
+        e.dataTransfer.setData("linkdel", deleteId)
+    }
     
     return (
         <div 
-        className="border border-gray-200 rounded-md space-y-2"
+        draggable
+        className="border
+        border-gray-200 
+        rounded-md space-y-2 
+        max-w-64
+        max-h-64
+        px-2
+        py-1
+        hover:cursor-pointer"
+        onDragStart= {
+            (e) => handleOnDrag(e, link)
+        }
         onClick= {
             (e) => {
                 e.preventDefault();
@@ -24,7 +38,7 @@ export default function LinkItemView (
             }
         }
         >
-            <p className="font-bold text-xl text-slate-900">
+            <p className="font-bold text-center text-xl text-slate-900">
                 {link.title}
             </p>
         </div>

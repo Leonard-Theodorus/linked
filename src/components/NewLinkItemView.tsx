@@ -2,29 +2,38 @@ import { useState } from "react"
 
 
 interface NewLinkItemProps{
+    link : string,
+    title : string,
+    topic : string,
+    topics : string[],
     onSubmitNewLink : (newLink : string, newTitle : string, newTopic : string) => void
 }
 
 export default function NewLinkItemView (
 {
+    link,
+    title,
+    topic,
+    topics,
     onSubmitNewLink
 } : NewLinkItemProps) {
+    
 
-    const [newLink, setNewLink] = useState("") 
-    const [newTitle, setNewTitle] = useState("") 
-    const [newTopic, setNewTopic] = useState("") 
+    const [newLink, setNewLink] = useState(link)
+    const [newTitle, setNewTitle] = useState(title) 
+    const [newTopic, setNewTopic] = useState(topic) 
 
-    const topics : string[] = ["Informative", "Entertainment", "Misc"]
 
-    function handleSubmit() {
+    function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
         onSubmitNewLink(newLink, newTitle, newTopic)
         setNewLink("")
         setNewTitle("")
-        setNewTopic("")
+        setNewTopic(topics[0])
     }
 
     function checkLink() : boolean {
-        if (newLink.startsWith("https://www.") || newLink.startsWith("http://www.")) {
+        if (newLink.startsWith("https://") || newLink.startsWith("http://")) {
             return true
         }
         return false
@@ -44,7 +53,8 @@ export default function NewLinkItemView (
     return (
         <form 
         className="flex flex-col"
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+        >
             <div className="flex">
                 <input
                 value={newLink}
@@ -65,6 +75,7 @@ export default function NewLinkItemView (
                     <select 
                     className="border border-gray-400 rounded-md"
                     value= {newTopic}
+                    key={topic}
                     onChange= {(e) => handleTopicSelected(e.target.value)}>
                         {topics.map(
                             (topic) => (
@@ -78,10 +89,6 @@ export default function NewLinkItemView (
 
             {checkTitleAndTopic(newTitle, newTopic) && (
                 <button 
-                onSubmit={(e) => {
-                    e.preventDefault()
-                    handleSubmit()
-                }}
                 type="submit"
                 className="rounded-md border bg-slate-900 text-white p-2 my-2"
                 >

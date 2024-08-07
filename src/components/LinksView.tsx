@@ -4,24 +4,23 @@ import LinkItemView from "./LinkItemView";
 interface LinksViewProps {
     links : LinkItem[],
     onClickLinkItem : (link : string) => void,
-    onDeleteLinkItem : (id : number) => void
 }
 
 export default function LinksView (
 {
     links,
     onClickLinkItem,
-    onDeleteLinkItem
 } : LinksViewProps) {
 
     return (
-        <div className="flex">
+        <div 
+        className="grid grid-cols-4 gap-4 max-w-lg ">
             {links.map(
                 (link) => (
                     <LinkItemView
                         link={link}
+                        key= {link.id}
                         onClickLinkItem= {onClickLinkItem}
-                        onDeleteLinkItem= {onDeleteLinkItem}
 
                     />
                 )
