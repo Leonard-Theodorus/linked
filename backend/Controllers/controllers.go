@@ -1,6 +1,7 @@
 package controllers
 
 import (
+    "fmt"
 	"linked-backend/Database"
 	"linked-backend/Models"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 func GetLinks(c *gin.Context) {
     var links []models.LinkItem
     database.GetDB().Find(&links)
+    fmt.Println(links)
     c.JSON(http.StatusOK, links)
 }
 

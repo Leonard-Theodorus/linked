@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import LinksView from './components/LinksView'
-import { dummyLinks } from './data/LinkItemDummy'
 import NewLinkItemView from './components/NewLinkItemView'
 import { LinkItem } from './types/LinkItem'
+import { dummyLinks } from './data/LinkItemDummy'
 import DeleteLinkItemView from './components/DeleteLinkItemView'
 import LinkItemFilterView from './components/LinkItemFilterView'
 import { linkFilters } from './data/LinkFilters'
 
 function App() {
-    let initialLinksState = dummyLinks
+    let initialLinksState : LinkItem[] = dummyLinks
 
     const [links, setLinks] = useState(initialLinksState)
     const [filteredLinks, setFilteredLinks] = useState(initialLinksState)
@@ -34,7 +34,53 @@ function App() {
         deleteLinkItem(toBeDeleted)
     }
 
-    function deleteLinkItem (id : number) {
+    async function getLinks () {
+        const endpoint : string = "http://localhost:8080/links"
+        const response = await fetch(endpoint, {
+            method : "GET",
+            mode : "cors",
+            headers : {
+                "Content-type" : "application/json"
+            }
+        })
+        if (!response.ok) {
+            // Error Handling
+        }
+        const data = await response.json() 
+        console.log("GET RESULT")
+        let linkItems : LinkItem[] = []
+        data.map(
+            (item : any) => {
+                const newItem : LinkItem = {
+                    id : item.ID,
+                    title : item.title,
+                    topic : item.topic,
+                    link : item.link
+                }
+                linkItems.push(newItem)
+            }
+        )
+        setLinks(linkItems)
+        console.log(linkItems)
+    }
+
+    async function deleteLinkItem (id : number) {
+        const endpoint : string = `http://localhost:8080/link/${id}`
+
+        const response = await fetch(endpoint, {
+            method : "DELETE",
+            mode : "cors",
+            headers : {
+                "Content-type" : "application/json"
+            }
+        })
+
+        if (!response.ok) {
+            // Error Handling
+        }
+        const data = await response.json()
+        console.log(data)
+
         setLinks (
             (prevLinks) => (
                 prevLinks.filter(link => link.id !== id)
@@ -42,12 +88,27 @@ function App() {
         )
     }
 
-    function submitNewLink (newLink : string, newTitle : string, newTopic : string) {
-        const newLinkItem : LinkItem = {
-            id : Date.now(),
+    async function submitNewLink (newLink : string, newTitle : string, newTopic : string) {
+        let newLinkItem : LinkItem = {
+            id : null,
             topic : newTopic,
             title : newTitle,
-            link : newLink
+            link : newLink,
+        }
+        const endPoint : string = "http://localhost:8080/link"
+
+        const response = await fetch(endPoint, {
+            method : "POST",
+            mode : "cors",
+            headers : { 
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(newLinkItem)
+        })
+        if (!response.ok) {
+            console.log(response.text)
+            // TODO: Error Handling
+            return
         }
         setLinks([...links, newLinkItem])
     }
@@ -87,7 +148,15 @@ function App() {
         [links, filters]
     )
 
-
+    useEffect(
+        () => {
+            console.log("FETCHING...")
+            let ignore = false
+            if (!ignore) getLinks()
+            return () => {ignore = true}
+        },
+        []
+    )
 
     return (
         <main className='h-screen'>

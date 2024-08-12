@@ -1,5 +1,5 @@
 export interface LinkItem {
-    id : number,
+    id : number | null,
     title : string,
     topic : string,
     link : string

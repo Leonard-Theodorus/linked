@@ -14,6 +14,9 @@ export default function LinkItemView (
 
     function handleOnDrag(e : React.DragEvent, linkToDelete : LinkItem) {
         const deleteId : string = String(linkToDelete.id)
+        console.log("DELETING")
+        console.log(linkToDelete)
+        console.log(deleteId)
         e.dataTransfer.setData("linkdel", deleteId)
     }
     
